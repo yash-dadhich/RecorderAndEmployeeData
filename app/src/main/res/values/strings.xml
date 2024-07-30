@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RecorderTaskApp</string>
+    <string name="recording">RECORDING\n</string>
+    <string name="employee">EMPLOYEE</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_recoding_found">No Recoding Found!!</string>
+    <string name="there_s_nothing_here_yet_hit_the_record_button_to_capture_something_amazing">There\'s nothing here yet. Hit the record button to capture something amazing!</string>
+    <string name="record">Record</string>
+    <string name="employee_details">EMPLOYEE DETAILS</string>
+    <string name="play_audio">Play audio</string>
+    <string name="delete_audio">Delete Audio</string>
+</resources>
