@@ -28,14 +28,14 @@ class RecordingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_recordings, container, false)
-        recyclerView = view.findViewById(R.id.rv_recordings)
-        setupRecyclerView()
-        loadAudioMetadata()
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerView = view.findViewById(R.id.rv_recordings)
 
         val fab = view.findViewById<ImageView>(R.id.fab_record)
         fab.setOnClickListener {
@@ -43,6 +43,13 @@ class RecordingsFragment : Fragment() {
                 startActivity(it)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        setupRecyclerView()
+        loadAudioMetadata()
     }
 
     private fun setupRecyclerView() {

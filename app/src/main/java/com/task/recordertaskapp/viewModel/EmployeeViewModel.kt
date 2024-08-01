@@ -1,12 +1,27 @@
 package com.task.recordertaskapp.viewModel
 
-import androidx.lifecycle.LiveData
+import ApiResponse
+import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.task.recordertaskapp.api.Repo
-import com.task.recordertaskapp.api.Resource
+import com.task.recordertaskapp.models.EmployeeData
+import kotlinx.coroutines.launch
 
 
 class EmployeeViewModel : ViewModel() {
     private val repository = Repo()
-    val data: LiveData<Resource<YourResponseType>> = repository.fetchData()
+
+    private val _employeeData = MutableLiveData<ApiResponse<EmployeeData>>()
+
+    var employeeData : LiveData<ApiResponse<EmployeeData>>  = _employeeData
+
+    fun getData() {
+        viewModelScope.launch {
+            _employeeData.postValue(ApiResponse.Loading)
+            val response = repository.getData()
+            _employeeData.postValue(response)
+
+        }
+    }
 }

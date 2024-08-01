@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         // Retrieve and show the stored data
         val audioName = sharedPreferences.getString("audio_name", "No Name")
-        val backgroundColor = sharedPreferences.getInt("background_color", R.color.black)
+        val backgroundColor = sharedPreferences.getInt("background_color", R.color.white)
 
         // Show the data as a Toast
         Toast.makeText(this, "Audio Name: $audioName, Background Color ID: $backgroundColor", Toast.LENGTH_LONG).show()

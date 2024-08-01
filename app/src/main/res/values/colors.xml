@@ -6,6 +6,7 @@
     <color name="lightPrimaryColor">#DF4894EB</color>
     <color name="redColor">#F44336</color>
     <color name="greyTextColor">#55565A</color>
+    <color name="greyBackTextColor">#7578797C</color>
 
 
     <color name="red">#FF0000</color>

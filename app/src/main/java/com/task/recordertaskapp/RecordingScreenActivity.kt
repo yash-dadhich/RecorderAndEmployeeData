@@ -163,7 +163,7 @@ class RecordingScreenActivity : AppCompatActivity() {
     private fun getSelectedColor(colorPicker: LinearLayout): Int {
         // Get the selected color from the color picker
         // This is a placeholder. You should implement actual color selection.
-        return R.color.black // Default color
+        return R.color.white // Default color
     }
 
     private fun saveAudioMetadata(name: String, backgroundColor: Int) {

@@ -9,6 +9,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/progressBackground"
+            android:background="@color/greyBackTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/text"
@@ -20,6 +33,7 @@
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEmployee"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -12,6 +12,9 @@ constraintlayout = "2.1.4"
 gsonVersion ="2.10.1"
 retrofitVersion="2.9.0"
 loggingVersion="5.0.0-alpha.2"
+jsonConvertorVersion ="2.9.0"
+coroutineVersion ="1.8.0"
+viewModelVersion ="2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +28,11 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 gson = {group="com.google.code.gson",name="gson",version.ref="gsonVersion"}
 retrofit = {group="com.squareup.retrofit2",name="retrofit",version.ref="retrofitVersion"}
 logging = {group="com.squareup.okhttp3",name="logging-interceptor",version.ref="loggingVersion"}
+jsonConvertor = {group="com.squareup.retrofit2",name="converter-gson",version.ref="jsonConvertorVersion"}
+coroutine = {group="org.jetbrains.kotlinx",name="kotlinx-coroutines-android",version.ref="coroutineVersion"}
+viewModel = {group="androidx.lifecycle",name="lifecycle-viewmodel-ktx",version.ref="viewModelVersion"}
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

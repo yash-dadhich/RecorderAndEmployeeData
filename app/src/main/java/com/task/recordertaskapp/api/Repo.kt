@@ -1,31 +1,26 @@
 package com.task.recordertaskapp.api
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
+import ApiResponse
+import com.task.recordertaskapp.models.EmployeeData
+
 
 // YourRepository.kt
 class Repo {
 
-    private val apiService: ApiService = RetrofitClient.instance.create(ApiService::class.java)
+    private val apiService: ApiService = RetrofitInstance.api
 
-    fun fetchData(): LiveData<Resource<YourResponseType>> {
-        val data = MutableLiveData<Resource<YourResponseType>>()
-        apiService.getYourData().enqueue(object : Callback<YourResponseType> {
-            override fun onResponse(call: Call<YourResponseType>, response: Response<YourResponseType>) {
-                if (response.isSuccessful) {
-                    data.value = Resource.success(response.body())
-                } else {
-                    data.value = Resource.error("Error: ${response.message()}", null)
-                }
-            }
+//    suspend fun fetchData(): JsonObject {
+//        return apiService.getEmployeeData()
+//    }
 
-            override fun onFailure(call: Call<YourResponseType>, t: Throwable) {
-                data.value = Resource.error("Failure: ${t.message}", null)
-            }
-        })
-        return data
+
+    suspend fun getData(): ApiResponse<EmployeeData> {
+        return try {
+            val response = RetrofitInstance.api.getEmployeeData()
+            ApiResponse.Success(response)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
     }
 }
