@@ -4,23 +4,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.task.recordertaskapp.R
 import com.task.recordertaskapp.models.AudioMetadata
 
-class AudioMetadataAdapter(
+class AudioMetaDataAdapter(
     private var audioList: List<AudioMetadata>,
     private val onPlayClick: (AudioMetadata) -> Unit,
     private val onDeleteClick: (AudioMetadata) -> Unit
-) : RecyclerView.Adapter<AudioMetadataAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<AudioMetaDataAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.rvItemTitle)
         val playButton: ImageView = itemView.findViewById(R.id.play)
         val deleteButton: ImageView = itemView.findViewById(R.id.deleteRecording)
-        val itemLayout: ConstraintLayout = itemView.findViewById(R.id.recording_item_layout)
+        val itemLayout: CardView = itemView.findViewById(R.id.recording_item_layout)
 
         init {
             playButton.setOnClickListener {
@@ -47,7 +49,7 @@ class AudioMetadataAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val audioMetadata = audioList[position]
         holder.titleTextView.text = audioMetadata.name
-        holder.itemLayout.setBackgroundColor(holder.itemView.context.getColor(audioMetadata.backgroundColor))
+        holder.itemLayout.setCardBackgroundColor(holder.itemView.context.getColor(audioMetadata.backgroundColor))
     }
 
     override fun getItemCount(): Int {

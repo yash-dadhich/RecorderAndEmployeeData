@@ -5,44 +5,102 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Dialog Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Recording"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- EditText with Border -->
     <EditText
         android:id="@+id/name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter recording name"
-        android:inputType="text"/>
+        android:hint="Recording 1"
+        android:padding="12dp"
+        android:background="@drawable/recording_list_bg" />
 
+    <!-- Space between EditText and Color Picker -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <!-- TextView for Color Selection -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select card color"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- LinearLayout for Color Picker -->
     <LinearLayout
         android:id="@+id/color_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
 
-        <!-- Example color options -->
-        <View
-            android:id="@+id/color_option1"
-            android:layout_width="32dp"
+        <!-- Color boxes -->
+        <ImageView
+            android:id="@+id/color_box1"
+            android:layout_width="0dp"
             android:layout_height="32dp"
-            android:background="@android:color/holo_red_light"
-            android:layout_marginEnd="8dp"/>
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:background="@color/EFE8FF"/>
 
-        <View
-            android:id="@+id/color_option2"
-            android:layout_width="32dp"
+        <ImageView
+            android:id="@+id/color_box2"
+            android:layout_width="0dp"
             android:layout_height="32dp"
-            android:background="@android:color/holo_blue_light"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:background="@color/EFE8FF"/>
 
-        <View
-            android:id="@+id/color_option3"
-            android:layout_width="32dp"
+        <ImageView
+            android:id="@+id/color_box3"
+            android:layout_width="0dp"
             android:layout_height="32dp"
-            android:background="@android:color/holo_green_light"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:background="@color/FFDFDF"/>
 
-        <!-- Add more color options as needed -->
+        <ImageView
+            android:id="@+id/color_box4"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@color/E2F2FF"/>
 
+        <ImageView
+            android:id="@+id/color_box5"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="1"
+            android:background="@color/D9FFDD"
+/>
+        <ImageView
+            android:id="@+id/color_box6"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@color/FFEDD8"
+/>
     </LinearLayout>
 
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:enabled="false" />
 </LinearLayout>

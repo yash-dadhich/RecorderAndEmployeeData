@@ -4,12 +4,17 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/recording_mic"/>
+        android:src="@drawable/recording_mic" />
 
     <TextView
         android:id="@+id/time_indicator"
@@ -20,6 +25,8 @@
         android:layout_below="@id/image_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
+
+    </RelativeLayout>
 
     <!-- This is the view whose background color will be changed -->
     <LinearLayout
@@ -32,32 +39,35 @@
         <!-- Other views can be placed here -->
     </LinearLayout>
 
-    <Button
+
+    <ImageView
         android:id="@+id/button_cross"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cross"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toStartOf="@+id/button_start"
+        android:src="@drawable/cancel_inactive" />
 
-    <Button
+    <ImageView
         android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/play_circle" />
 
-    <Button
+
+    <ImageView
         android:id="@+id/button_tick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tick"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toEndOf="@+id/button_start"
+        android:src="@drawable/ok_inactive" />
+
 </RelativeLayout>

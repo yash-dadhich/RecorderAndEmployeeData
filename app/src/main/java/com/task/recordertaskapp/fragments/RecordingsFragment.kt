@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -14,13 +15,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.task.recordertaskapp.R
 import com.task.recordertaskapp.RecordingScreenActivity
-import com.task.recordertaskapp.adapter.AudioMetadataAdapter
+import com.task.recordertaskapp.adapter.AudioMetaDataAdapter
 import com.task.recordertaskapp.models.AudioMetadata
-
 class RecordingsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var audioMetadataAdapter: AudioMetadataAdapter
+    private lateinit var noRecordingsFound: LinearLayout
+    private lateinit var audioMetadataAdapter: AudioMetaDataAdapter
     private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreateView(
@@ -28,7 +29,6 @@ class RecordingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_recordings, container, false)
-
         return view
     }
 
@@ -36,6 +36,7 @@ class RecordingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.rv_recordings)
+        noRecordingsFound = view.findViewById(R.id.noRecordingsFound)
 
         val fab = view.findViewById<ImageView>(R.id.fab_record)
         fab.setOnClickListener {
@@ -47,13 +48,12 @@ class RecordingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         setupRecyclerView()
         loadAudioMetadata()
     }
 
     private fun setupRecyclerView() {
-        audioMetadataAdapter = AudioMetadataAdapter(
+        audioMetadataAdapter = AudioMetaDataAdapter(
             audioList = emptyList(),
             onPlayClick = { audioMetadata ->
                 playAudio(audioMetadata)
@@ -66,16 +66,27 @@ class RecordingsFragment : Fragment() {
     }
 
     private fun loadAudioMetadata() {
-        val sharedPreferences = requireActivity().getSharedPreferences("audio_prefs", AppCompatActivity.MODE_PRIVATE)
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("audio_prefs", AppCompatActivity.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedPreferences.getString("audio_metadata", "[]")
         val type = object : TypeToken<List<AudioMetadata>>() {}.type
         val audioMetadataList: List<AudioMetadata> = gson.fromJson(json, type)
         audioMetadataAdapter.updateData(audioMetadataList)
+
+        // Toggle visibility based on list size
+        if (audioMetadataList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            noRecordingsFound.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            noRecordingsFound.visibility = View.GONE
+        }
     }
 
     private fun deleteRecording(audioMetadata: AudioMetadata) {
-        val sharedPreferences = requireActivity().getSharedPreferences("audio_prefs", AppCompatActivity.MODE_PRIVATE)
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("audio_prefs", AppCompatActivity.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedPreferences.getString("audio_metadata", "[]")
         val type = object : TypeToken<List<AudioMetadata>>() {}.type
@@ -84,6 +95,12 @@ class RecordingsFragment : Fragment() {
         val updatedJson = gson.toJson(audioMetadataList)
         sharedPreferences.edit().putString("audio_metadata", updatedJson).apply()
         audioMetadataAdapter.updateData(audioMetadataList)
+
+        // Toggle visibility after deletion
+        if (audioMetadataList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            noRecordingsFound.visibility = View.VISIBLE
+        }
     }
 
     private fun playAudio(audioMetadata: AudioMetadata) {

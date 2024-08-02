@@ -1,7 +1,6 @@
 package com.task.recordertaskapp
 
 import android.Manifest
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
@@ -14,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,14 +23,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.task.recordertaskapp.models.AudioMetadata
 import java.io.File
-
 class RecordingScreenActivity : AppCompatActivity() {
 
     private lateinit var imageView: ImageView
     private lateinit var timeIndicator: TextView
-    private lateinit var buttonCross: Button
-    private lateinit var buttonStart: Button
-    private lateinit var buttonTick: Button
+    private lateinit var buttonCross: ImageView
+    private lateinit var buttonStart: ImageView
+    private lateinit var buttonTick: ImageView
     private lateinit var colorBackgroundView: LinearLayout
     private var isRecording = false
     private var handler: Handler? = null
@@ -76,19 +75,22 @@ class RecordingScreenActivity : AppCompatActivity() {
         }
 
         buttonCross.setOnClickListener {
-            // Handle the cross button click (e.g., cancel recording)
-            finish()
-        }
-
-        buttonTick.setOnClickListener {
-            if (seconds > 0) {
-                showSaveDialog()
+            if (isRecording) {
+                cancelRecording()
+                buttonTick.isEnabled=false
+                buttonTick.setImageResource(R.drawable.ok_inactive)
             } else {
-                // Handle case where there's no recording to save
+                finish()
             }
         }
 
-        // Check permissions
+        buttonTick.setOnClickListener {
+            if (isRecording) {
+                stopRecording()
+                showSaveDialog()
+            }
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -96,20 +98,25 @@ class RecordingScreenActivity : AppCompatActivity() {
     }
 
     private fun startRecording() {
-        // Set up MediaRecorder
-        audioFile = File(getExternalFilesDir(null), "recording_${System.currentTimeMillis()}.mp3")
+        // Prepare for recording
+        audioFile = File(externalCacheDir, "${System.currentTimeMillis()}.3gp")
         mediaRecorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             setOutputFile(audioFile?.absolutePath)
             prepare()
             start()
         }
         isRecording = true
+        buttonStart.setImageResource(R.drawable.stop) // Change to stop icon
+        buttonTick.isEnabled = true // Enable tick button
+        buttonCross.isEnabled = true // Enable tick button
+        buttonCross.setImageResource(R.drawable.cross) // Change to cancel icon
+        buttonTick.setImageResource(R.drawable.ok_active)
+        seconds = 0
         handler = Handler()
-        handler?.post(runnable)
-        buttonStart.text = "Stop"
+        handler?.postDelayed(runnable, 0)
     }
 
     private fun stopRecording() {
@@ -119,70 +126,115 @@ class RecordingScreenActivity : AppCompatActivity() {
         }
         mediaRecorder = null
         isRecording = false
+        buttonStart.setImageResource(R.drawable.play_circle) // Change to play icon
+        buttonTick.isEnabled = false // Disable tick button
+        buttonCross.isEnabled = false
+        buttonCross.setImageResource(R.drawable.ok_inactive)
+        buttonCross.setImageResource(R.drawable.cancel_inactive)
         handler?.removeCallbacks(runnable)
+    }
+
+    private fun cancelRecording() {
+        stopRecording() // Stop recording
         seconds = 0
-        updateTimer()
-        buttonStart.text = "Start"
+        updateTimer() // Reset timer
     }
 
     private fun updateTimer() {
         val minutes = seconds / 60
-        val hours = minutes / 60
-        timeIndicator.text = String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60)
-
-        when {
-            seconds > 3600 -> timeIndicator.setTextColor(getColor(R.color.red)) // 1 hour
-            seconds > 60 -> timeIndicator.setTextColor(getColor(R.color.orange)) // 1 minute
-            seconds > 0 -> timeIndicator.setTextColor(getColor(R.color.green)) // > 0 seconds
-            else -> timeIndicator.setTextColor(getColor(R.color.black)) // Default
-        }
+        val remainingSeconds = seconds % 60
+        val time = String.format("%02d:%02d", minutes, remainingSeconds)
+        timeIndicator.text = time
     }
 
     private fun showSaveDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_save_recording, null)
-        val nameEditText = view.findViewById<EditText>(R.id.name_edit_text)
-        val colorPicker = view.findViewById<LinearLayout>(R.id.color_picker)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_save_recording, null)
+        val nameEditText: EditText = dialogView.findViewById(R.id.name_edit_text)
+        val colorPicker: LinearLayout = dialogView.findViewById(R.id.color_picker)
+        val confirmButton: Button = dialogView.findViewById(R.id.confirm_button)
+        val colorBoxes = arrayOf(
+            dialogView.findViewById<ImageView>(R.id.color_box1),
+            dialogView.findViewById<ImageView>(R.id.color_box2),
+            dialogView.findViewById<ImageView>(R.id.color_box3),
+            dialogView.findViewById<ImageView>(R.id.color_box4),
+            dialogView.findViewById<ImageView>(R.id.color_box5),
+            dialogView.findViewById<ImageView>(R.id.color_box6)
+        )
+
+        var selectedColorId: Int? = null
+
+        colorBoxes.forEachIndexed { index, imageView ->
+            imageView.setOnClickListener {
+                // Clear previously selected color box
+                colorBoxes.forEach { box -> box.setImageDrawable(null) }
+
+                // Set tick mark on selected color box
+                imageView.setImageResource(R.drawable.ic_check) // Replace with your tick drawable
+
+                // Save selected color ID
+                selectedColorId = when (index) {
+                    0 -> R.color.EFE8FF
+                    1 -> R.color.FFDFDF
+                    2 -> R.color.E2F2FF
+                    3 -> R.color.D9FFDD
+                    4 -> R.color.FFEDD8
+                    5 -> R.color.white
+                    else -> null
+                }
+
+                // Enable the confirm button
+                confirmButton.isEnabled = selectedColorId != null
+            }
+        }
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Save Recording")
-            .setView(view)
-            .setPositiveButton("OK") { dialog, _ ->
-                val name = nameEditText.text.toString()
-                val backgroundColor = getSelectedColor(colorPicker)
-                saveAudioMetadata(name, backgroundColor)
-                dialog.dismiss()
-                finish() // Return to previous activity
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setView(dialogView)
+            .setCancelable(false) // Prevent dialog from being dismissed with back button or outside click
             .create()
+
+        dialog.setOnShowListener {
+            confirmButton.setOnClickListener {
+                val name = nameEditText.text.toString()
+                val finalName = if (name.isBlank()) getDefaultRecordingName() else name
+                val backgroundColor = selectedColorId ?: R.color.white
+
+                if (selectedColorId != null) {
+                    saveAudioMetadata(finalName, backgroundColor)
+                    dialog.dismiss() // Close the dialog after saving
+                    finish() // Close the activity
+                } else {
+                    // Show a message to select a color if none is selected
+                    Toast.makeText(this, "Please select a color.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         dialog.show()
     }
 
-    private fun getSelectedColor(colorPicker: LinearLayout): Int {
-        // Get the selected color from the color picker
-        // This is a placeholder. You should implement actual color selection.
-        return R.color.white // Default color
+    private fun getDefaultRecordingName(): String {
+        val lastRecordingNumber = sharedPreferences.getInt("recording_number", 0)
+        val newRecordingNumber = lastRecordingNumber + 1
+        sharedPreferences.edit().putInt("recording_number", newRecordingNumber).apply()
+        return "Recording $newRecordingNumber"
     }
 
     private fun saveAudioMetadata(name: String, backgroundColor: Int) {
         val audioMetadata = AudioMetadata(name, backgroundColor, audioFile?.absolutePath ?: "")
-        val currentList = getStoredAudioMetadata().toMutableList()
-        currentList.add(audioMetadata)
-        saveAudioMetadata(currentList)
+        val audioMetadataList = getStoredAudioMetadata().toMutableList()
+        audioMetadataList.add(audioMetadata)
+        saveAudioMetadata(audioMetadataList)
     }
 
     private fun getStoredAudioMetadata(): List<AudioMetadata> {
-        val gson = Gson()
         val json = sharedPreferences.getString("audio_metadata", "[]")
         val type = object : TypeToken<List<AudioMetadata>>() {}.type
-        return gson.fromJson(json, type)
+        return Gson().fromJson(json, type)
     }
 
-    private fun saveAudioMetadata(metadataList: List<AudioMetadata>) {
-        val gson = Gson()
-        val json = gson.toJson(metadataList)
+    private fun saveAudioMetadata(audioMetadataList: List<AudioMetadata>) {
+        val json = Gson().toJson(audioMetadataList)
         sharedPreferences.edit().putString("audio_metadata", json).apply()
     }
 }
