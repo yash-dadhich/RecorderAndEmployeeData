@@ -1,4 +1,4 @@
-package com.task.recordertaskapp.adapters
+package com.task.recordertaskapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View

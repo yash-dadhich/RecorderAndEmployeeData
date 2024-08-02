@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private val sharedPreferences by lazy {
         getSharedPreferences("audio_prefs", MODE_PRIVATE)
+        getSharedPreferences("emp_prefs", MODE_PRIVATE)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -14,7 +14,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.task.recordertaskapp.R
 import com.task.recordertaskapp.RecordingScreenActivity
-import com.task.recordertaskapp.adapters.AudioMetadataAdapter
+import com.task.recordertaskapp.adapter.AudioMetadataAdapter
 import com.task.recordertaskapp.models.AudioMetadata
 
 class RecordingsFragment : Fragment() {
